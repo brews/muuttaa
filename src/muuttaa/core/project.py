@@ -25,7 +25,8 @@ def project(
     *,
     model: Projector,
     parameters: xr.Dataset,
-    merge_predictors_parameters: Callable[[Iterable[xr.Dataset]], xr.Dataset] | None = None,
+    merge_predictors_parameters: Callable[[Iterable[xr.Dataset]], xr.Dataset]
+    | None = None,
 ) -> xr.Dataset:
     """
     Project given predictors, a model, and model parameters.

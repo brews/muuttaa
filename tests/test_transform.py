@@ -63,7 +63,7 @@ def test_segmentweight_regionalization():
         coords={
             "region": ["a", "b"],
         },
-        name="variable1"
+        name="variable1",
     ).to_dataset()
 
     weights = SegmentWeights(w)
@@ -98,13 +98,13 @@ def test_segmentweight_regionalization_extradim():
     )
 
     expected = xr.DataArray(
-        np.array([[90. , 91.2, 92.4, 93.6, 94.8], [35.0, 36.0, 37.0, 38.0, 39.0]]),
+        np.array([[90.0, 91.2, 92.4, 93.6, 94.8], [35.0, 36.0, 37.0, 38.0, 39.0]]),
         dims=("region", "time"),
         coords={
             "region": ["a", "b"],
             "time": np.arange(5),
         },
-        name="variable1"
+        name="variable1",
     ).to_dataset()
 
     weights = SegmentWeights(w)

@@ -9,7 +9,7 @@ def test_basic_projection():
     """
     predictors = xr.Dataset({"foobar": (["idx"], [0, 0, 0])})
     params = xr.Dataset({"ni": (["idx"], [1, 2, 3])})
-    expected =  xr.Dataset({"impact": (["idx"], [13, 14, 15])})
+    expected = xr.Dataset({"impact": (["idx"], [13, 14, 15])})
 
     def _pre(x):
         out = xr.Dataset()
@@ -31,4 +31,3 @@ def test_basic_projection():
 
     actual = project(predictors, model=test_impact_model, parameters=params)
     xr.testing.assert_allclose(actual, expected)
-
