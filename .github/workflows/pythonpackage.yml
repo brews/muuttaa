@@ -1,0 +1,43 @@
+name: Python package
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Upgrade pip
+        run: |
+          pip install --upgrade pip
+      - name: Install package
+        run: |
+          pip install .[test]
+      - name: Format check with ruff
+        run: |
+          ruff format . --diff
+      - name: Lint check with ruff
+        run: |
+          ruff check . --output-format=github
+      - name: Type check with mypy
+        run: |
+          mypy src/muuttaa
+      - name: Test with pytest
+        run: |
+          pytest -vv --cov-report term-missing --cov-report xml
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
