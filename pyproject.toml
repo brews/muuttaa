@@ -1,0 +1,69 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "muuttaa"
+description = "Minimalist xarray-based climate impact framework"
+readme = "README.md"
+dynamic = ["version"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "xarray",
+]
+
+[project.optional-dependencies]
+test = [
+    "mypy",
+    "numpy",
+    "pytest",
+    "pytest-cov",
+    "ruff>=0.1.7",
+]
+
+[project.urls]
+Homepage = "https://github.com/brews/muuttaa"
+Documentation = "https://github.com/brews/muuttaa"
+Source = "https://github.com/brews/muuttaa"
+"Bug Tracker" = "https://github.com/brews/muuttaa/issues"
+
+[tool.hatch.version]
+source = "vcs"
+fallback-version = "999"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/muuttaa/_version.py"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/.github",
+]
+
+[tool.pytest.ini_options]
+addopts = "--cov=muuttaa"
+
+[tool.ruff.lint]
+# E402: module level import not at top of file
+# E501: long lines
+ignore = [
+    "E402",
+    "E501",
+]
+select = [
+    # Pyflakes
+    "F",
+    # Pycodestyle
+    "E",
+    "W",
+    # Pyupgrade
+    "UP",
+]
