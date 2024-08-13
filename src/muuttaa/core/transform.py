@@ -1,3 +1,5 @@
+from muuttaa.types import PrePostProcessable, DataContainer
+
 from typing import Protocol
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
@@ -17,7 +19,7 @@ class Regionalizer(Protocol):
 
 # TODO: Can we still read docstr of callables through their attributes after theyve been passed to an instantiated TransformationStrategy?
 @dataclass(frozen=True)
-class TransformationStrategy:
+class TransformationStrategy(PrePostProcessable[xr.Dataset]):
     """
     Named, tranformation steps applied to input gridded data, pre/post regionalization, to create a derived variable as output.
 
@@ -26,6 +28,18 @@ class TransformationStrategy:
 
     preprocess: Callable[[xr.Dataset], xr.Dataset]
     postprocess: Callable[[xr.Dataset], xr.Dataset]
+
+
+@dataclass(frozen=True)
+class Transform(PrePostProcessable[DataContainer]):
+    """
+    Named, tranformation steps applied to input gridded data, pre/post regionalization, to create a derived variable as output.
+
+    These steps should be general. They may contain logic for sanity checks on inputs and outputs, calculating derived variables and climate indices, adding or checking metadata or units. Avoid including logic for cleaning, or harmonizing input data, especially if it is specific to a single project's usecase. Generally avoid using a single strategy to output multiple unrelated variables.
+    """
+
+    preprocess: Callable[[DataContainer], DataContainer]
+    postprocess: Callable[[DataContainer], DataContainer]
 
 
 # Use class for segment weights because we're making assumptions/enforcements about the weight data's content and interactions...
@@ -67,7 +81,7 @@ def _default_transform_merge(x: Iterable[xr.Dataset]) -> xr.Dataset:
 def apply_transformations(
     gridded: xr.Dataset,
     *,
-    strategies: Iterable[TransformationStrategy],
+    strategies: Iterable[PrePostProcessable[xr.Dataset]],
     regionalize: Callable[[xr.Dataset], xr.Dataset],
     merge_transformed: Callable[[Iterable[xr.Dataset]], xr.Dataset] | None = None,
 ) -> xr.Dataset:
@@ -87,3 +101,25 @@ def apply_transformations(
         transformed.append(postprocessed)
 
     return merge_transformed(transformed)
+
+
+def apply_transforms(
+    d: DataContainer,
+    *,
+    transforms: Iterable[PrePostProcessable[DataContainer]],
+    regionalize: Callable[[DataContainer], DataContainer],
+    merge: Callable[[Iterable[DataContainer]], DataContainer],
+) -> DataContainer:
+    """
+    Apply multiple transforms to regionalize a dataset and return merged output.
+    """
+    transforms = tuple(transforms)
+
+    transformed = []
+    for t in transforms:
+        preprocessed = t.preprocess(d)
+        regionalized = regionalize(preprocessed)
+        postprocessed = t.postprocess(regionalized)
+        transformed.append(postprocessed)
+
+    return merge(transformed)

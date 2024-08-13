@@ -1,3 +1,4 @@
+from muuttaa.types import PrePostProjectable
 from typing import Any
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
@@ -23,7 +24,7 @@ class Projector:
 def project(
     predictors: xr.Dataset,
     *,
-    model: Projector,
+    model: PrePostProjectable[xr.Dataset],
     parameters: xr.Dataset,
     merge_predictors_parameters: Callable[[Iterable[xr.Dataset]], xr.Dataset]
     | None = None,
