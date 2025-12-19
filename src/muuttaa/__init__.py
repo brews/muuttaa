@@ -6,3 +6,11 @@ from muuttaa.core import (
     Projector,  # noqa: F401
     project,  # noqa: F401
 )
+
+__all__ = [
+    "TransformationStrategy",
+    "SegmentWeights",
+    "apply_transformations",
+    "Projector",
+    "project",
+]

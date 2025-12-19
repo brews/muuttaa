@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Internal change: Switched project management from hatch to uv.
 
+### Fixed
+
+- Fix private import type error for downstream packages with strict type checks.
+
 ## [0.1.1] - 2025-04-11
 
 ### Fixed
