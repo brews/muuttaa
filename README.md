@@ -6,3 +6,6 @@ Minimalist xarray-based climate impact framework.
 
 > [!CAUTION]
 > This is a toy. Don't use this in production. Expect it to break.
+
+> [!NOTICE]
+> This prototype is no longer being developed. This work has contributed to the [isku Python package](https://pypi.org/project/isku/). Work will continue in the [isku repository](https://github.com/brews/isku).
